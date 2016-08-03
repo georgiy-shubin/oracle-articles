@@ -1,7 +1,6 @@
 umask 022
 
 #### Manually Named Variables ####
-
 # Grid Environment
 export ORACLE_GRID_SW_RELEASE=12.1
 export ORACLE_GRID_PS_VERSION=12.1.0.2
@@ -62,7 +61,7 @@ echo '# Oracle Grid Software Version: '$ORACLE_GRID_PS_VERSION
 echo '    Grid Home: '$ORACLE_GRID_HOME
 echo ''
 echo '# Database(s) running on this host:'
-echo "    1. Database Instance: $ORACLE_DB_INSTANCE_NAME. Database Home: $ORACLE_DATABASE_HOME. Version: $ORACLE_DB_PS_VERSION"
+echo "    1. Database: $ORACLE_DB_INSTANCE_NAME. Database Home: $ORACLE_DATABASE_HOME. Version: $ORACLE_DB_PS_VERSION"
 echo ''
 echo '# Please use aliases listed below to switch between environments:'
 echo ''
@@ -85,5 +84,4 @@ echo ''
 echo ''
 
 PATH=$PATH:$HOME/.local/bin:$HOME/bin:$ORACLE_HOME/bin
-
 export PATH
