@@ -1,0 +1,89 @@
+umask 022
+
+#### Manually Named Variables ####
+
+# Grid Environment
+export ORACLE_GRID_SW_RELEASE=12.1
+export ORACLE_GRID_PS_VERSION=12.1.0.2
+export ORACLE_NODE_NUM=1
+
+# Database Environment
+export ORACLE_DB_SW_RELEASE=12.1
+export ORACLE_DB_PS_VERSION=12.1.0.2
+export ORACLE_DB_NAME=racdb
+export ORACLE_UNQNAME=racdb
+export ORACLE_SID_PREFIX=$ORACLE_UNQNAME
+
+# Common Variables
+export ORACLE_BASE=/u01/app/oracle
+export NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+export NLS_DATE_FORMAT="DD-MON-YYYY HH24:MI:SS"
+export NLS_TIMESTAMP_FORMAT="DD-MON-YYYY HH24:MI:SS.FF6"
+export NLS_TIMESTAMP_TZ_FORMAT="DD-MON-YYYY HH24:MI:SS.FF6 TZH:TZM"
+
+#### Dynamically Generated Variables ####
+export ORACLE_GRID_HOME=/u01/app/grid/`echo $ORACLE_GRID_PS_VERSION | tr -d .`
+export ORACLE_DATABASE_HOME=$ORACLE_BASE/product/`echo $ORACLE_DB_PS_VERSION | tr -d .`/dbhome_1
+
+export ORACLE_ASM_INSTANCE_NAME=+ASM$ORACLE_NODE_NUM
+export ORACLE_DB_INSTANCE_NAME=$ORACLE_SID_PREFIX$ORACLE_NODE_NUM
+
+export ORACLE_SID=$ORACLE_DB_INSTANCE_NAME
+export ORACLE_HOME=$ORACLE_DATABASE_HOME
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib
+
+# Environment switches
+export IPATH=$PATH:$HOME/.local/bin:$HOME/bin
+alias ge='export ORACLE_HOME=$ORACLE_GRID_HOME && export PATH=$IPATH:$ORACLE_HOME/bin && export LD_LIBRARY_PATH=$ORACLE_HOME/lib && export ORACLE_SID=$ORACLE_ASM_INSTANCE_NAME && echo " " && echo "####  You are now in the Oracle Grid Environment  ####" && echo "Oracle Grid Software Version: $ORACLE_GRID_PS_VERSION" && echo "ORACLE_HOME=$ORACLE_GRID_HOME" && echo "ORACLE_SID=$ORACLE_ASM_INSTANCE_NAME" && echo " "'
+alias de='export ORACLE_HOME=$ORACLE_DATABASE_HOME && export PATH=$IPATH:$ORACLE_HOME/bin && export LD_LIBRARY_PATH=$ORACLE_HOME/lib && export ORACLE_SID=$ORACLE_DB_INSTANCE_NAME && echo " " && echo "####  You are now in the Oracle Database Environment  ####" && echo "Oracle Database Software Version: $ORACLE_DB_PS_VERSION" && echo "ORACLE_HOME=$ORACLE_DATABASE_HOME" && echo "ORACLE_SID=$ORACLE_DB_INSTANCE_NAME" && echo " "'
+
+# Alert Log Aliases
+alias alasm='cd $ORACLE_BASE/diag/asm/+asm/$ORACLE_ASM_INSTANCE_NAME/trace'
+alias alcrs='cd $ORACLE_BASE/diag/crs/`hostname -s | tr '[:upper:]' '[:lower:]'`/crs/trace'
+alias aldb='cd $ORACLE_BASE/diag/rdbms/`echo $ORACLE_UNQNAME | tr '[:upper:]' '[:lower:]'`/$ORACLE_DB_INSTANCE_NAME/trace'
+
+# Command Line Tool Aliases
+alias rman='rlwrap rman'
+alias sqldb='rlwrap sqlplus / as sysdba'
+alias sqlasm='rlwrap sqlplus / as sysasm'
+alias sqlplus='rlwrap sqlplus'
+alias asmcmd='rlwrap asmcmd -p'
+alias dgmgrl='rlwrap dgmgrl'
+alias adrci='rlwrap adrci'
+
+# Information Displayed at Every Logon
+echo ''
+echo ''
+echo '############################## ORACLE USER PROFILE ENVIRONMENT  ##############################'
+echo ''
+echo '# The OS user "oracle" is owner of both Grid and Database software.'
+echo ''
+echo '# Oracle Grid Software Version: '$ORACLE_GRID_PS_VERSION
+echo '    Grid Home: '$ORACLE_GRID_HOME
+echo ''
+echo '# Database(s) running on this host:'
+echo "    1. Database Instance: $ORACLE_DB_INSTANCE_NAME. Database Home: $ORACLE_DATABASE_HOME. Version: $ORACLE_DB_PS_VERSION"
+echo ''
+echo '# Please use aliases listed below to switch between environments:'
+echo ''
+echo '    ge      Switches to the Grid Environment ($ORACLE_HOME | $ORACLE_SID)'
+echo '    de      Switches to the Database Environment ($ORACLE_HOME | $ORACLE_SID)'
+echo ''
+echo '    alasm   Opens the ASM alert_log catalog'
+echo '    alcrs   Opens the CRS/HAS alert_log catalog'
+echo '    aldb    Opens the DATABASE alert_log catalog'
+echo ''
+echo '    sqldb   Opens sqlplus as sysdba using rlwrap. MUST be used in the Database Environment'
+echo '    rman    Opens rman using rlwrap. MUST be used in the Database Environment'
+echo '    dgmgrl  Opens dgmgrl using rlwrap. MUST be used in the Database Environment'
+echo '    sqlasm  Opens sqlplus as sysasm using rlwrap. MUST be used in the Grid Environment'
+echo '    asmcmd  Opens asmcmd with -p option using rlwrap. MUST be used in the Grid Environment'
+echo '    adrci   Opens adrci using rlwrap. Can be used in both environments'
+echo ''
+echo '##############################################################################################'
+echo ''
+echo ''
+
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:$ORACLE_HOME/bin
+
+export PATH
